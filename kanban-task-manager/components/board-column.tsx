@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MoreVertical, Trash2, Pencil } from "lucide-react";
 import type { Column, Task } from "@/app/generated/prisma/client";
+import { TaskCard } from "@/components/task-card";
+import { CreateTaskButton } from "@/components/create-task-button";
 
 type ColumnWithTasks = Column & { tasks: Task[] };
 
@@ -92,7 +94,10 @@ export function BoardColumn({ column }: { column: ColumnWithTasks }) {
             </p>
 
             <div className="mt-4 flex flex-1 flex-col gap-2">
-                {/* Task cards go here — Step 4f */}
+                {column.tasks.map((task) => (
+                    <TaskCard key={task.id} task={task} />
+                ))}
+                <CreateTaskButton columnId={column.id} />
             </div>
         </div>
     );
