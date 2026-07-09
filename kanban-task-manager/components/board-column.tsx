@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MoreVertical, Trash2, Pencil } from "lucide-react";
 import {
@@ -22,7 +22,13 @@ import { CreateTaskButton } from "@/components/create-task-button";
 
 type ColumnWithTasks = Column & { tasks: Task[] };
 
-export function BoardColumn({ column }: { column: ColumnWithTasks }) {
+export function BoardColumn({
+    column,
+    dragHandle,
+}: {
+    column: ColumnWithTasks;
+    dragHandle?: React.ReactNode;
+}) {
     const router = useRouter();
     const [editing, setEditing] = useState(false);
     const [title, setTitle] = useState(column.title);
@@ -30,10 +36,14 @@ export function BoardColumn({ column }: { column: ColumnWithTasks }) {
     const [tasks, setTasks] = useState(column.tasks);
 
     // Keep local order in sync when the server sends fresh data
-    // (e.g. after a task is created/deleted elsewhere).
-    useEffect(() => {
+    // (e.g. after a task is created/deleted elsewhere). Adjusting state
+    // during render (rather than in an effect) avoids an extra
+    // render pass — see https://react.dev/learn/you-might-not-need-an-effect
+    const [prevColumnTasks, setPrevColumnTasks] = useState(column.tasks);
+    if (column.tasks !== prevColumnTasks) {
+        setPrevColumnTasks(column.tasks);
         setTasks(column.tasks);
-    }, [column.tasks]);
+    }
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -88,23 +98,26 @@ export function BoardColumn({ column }: { column: ColumnWithTasks }) {
     return (
         <div className="flex w-72 flex-shrink-0 flex-col rounded-[12px] bg-background-secondary p-4">
             <div className="flex items-center justify-between">
-                {editing ? (
-                    <input
-                        autoFocus
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        onBlur={saveTitle}
-                        onKeyDown={(e) => e.key === "Enter" && saveTitle()}
-                        className="w-full rounded-[8px] border border-primary bg-surface px-2 py-1 text-sm font-semibold text-text-primary outline-none"
-                    />
-                ) : (
-                    <h2
-                        onClick={() => setEditing(true)}
-                        className="cursor-text font-semibold text-text-primary"
-                    >
-                        {column.title}
-                    </h2>
-                )}
+                <div className="flex items-center gap-2">
+                    {dragHandle}
+                    {editing ? (
+                        <input
+                            autoFocus
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            onBlur={saveTitle}
+                            onKeyDown={(e) => e.key === "Enter" && saveTitle()}
+                            className="w-full rounded-[8px] border border-primary bg-surface px-2 py-1 text-sm font-semibold text-text-primary outline-none"
+                        />
+                    ) : (
+                        <h2
+                            onClick={() => setEditing(true)}
+                            className="cursor-text font-semibold text-text-primary"
+                        >
+                            {column.title}
+                        </h2>
+                    )}
+                </div>
 
                 <div className="relative">
                     <button
