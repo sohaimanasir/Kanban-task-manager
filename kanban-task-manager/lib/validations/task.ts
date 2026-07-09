@@ -9,5 +9,10 @@ export const updateTaskSchema = z.object({
     isCompleted: z.boolean().optional(),
 });
 
+export const reorderTasksSchema = z.object({
+    taskIds: z.array(z.string().uuid()).min(1),
+});
+
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+export type ReorderTasksInput = z.infer<typeof reorderTasksSchema>;
