@@ -9,7 +9,13 @@ import { CreateTaskButton } from "@/components/create-task-button";
 
 type ColumnWithTasks = Column & { tasks: Task[] };
 
-export function BoardColumn({ column }: { column: ColumnWithTasks }) {
+export function BoardColumn({
+    column,
+    dragHandle,
+}: {
+    column: ColumnWithTasks;
+    dragHandle?: React.ReactNode;
+}) {
     const router = useRouter();
     const [editing, setEditing] = useState(false);
     const [title, setTitle] = useState(column.title);
@@ -37,55 +43,58 @@ export function BoardColumn({ column }: { column: ColumnWithTasks }) {
 
     return (
         <div className="flex w-72 flex-shrink-0 flex-col rounded-[12px] bg-background-secondary p-4">
-            <div className="flex items-center justify-between">
-                {editing ? (
-                    <input
-                        autoFocus
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        onBlur={saveTitle}
-                        onKeyDown={(e) => e.key === "Enter" && saveTitle()}
-                        className="w-full rounded-[8px] border border-primary bg-surface px-2 py-1 text-sm font-semibold text-text-primary outline-none"
-                    />
-                ) : (
-                    <h2
-                        onClick={() => setEditing(true)}
-                        className="cursor-text font-semibold text-text-primary"
-                    >
-                        {column.title}
-                    </h2>
-                )}
-
-                <div className="relative">
-                    <button
-                        onClick={() => setMenuOpen((v) => !v)}
-                        className="text-text-secondary transition-colors hover:text-text-primary"
-                        aria-label="Column options"
-                    >
-                        <MoreVertical size={16} />
-                    </button>
-                    {menuOpen && (
-                        <div className="absolute right-0 top-6 z-10 w-36 rounded-[10px] border border-border bg-background-secondary p-1 shadow-lg">
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    setEditing(true);
-                                }}
-                                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-sm text-text-primary hover:bg-surface"
-                            >
-                                <Pencil size={14} /> Rename
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    deleteColumn();
-                                }}
-                                className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-sm text-error hover:bg-surface"
-                            >
-                                <Trash2 size={14} /> Delete
-                            </button>
-                        </div>
+            <div className="flex items-center gap-2">
+                {dragHandle}
+                <div className="flex flex-1 items-center justify-between">
+                    {editing ? (
+                        <input
+                            autoFocus
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            onBlur={saveTitle}
+                            onKeyDown={(e) => e.key === "Enter" && saveTitle()}
+                            className="w-full rounded-[8px] border border-primary bg-surface px-2 py-1 text-sm font-semibold text-text-primary outline-none"
+                        />
+                    ) : (
+                        <h2
+                            onClick={() => setEditing(true)}
+                            className="cursor-text font-semibold text-text-primary"
+                        >
+                            {column.title}
+                        </h2>
                     )}
+
+                    <div className="relative">
+                        <button
+                            onClick={() => setMenuOpen((v) => !v)}
+                            className="text-text-secondary transition-colors hover:text-text-primary"
+                            aria-label="Column options"
+                        >
+                            <MoreVertical size={16} />
+                        </button>
+                        {menuOpen && (
+                            <div className="absolute right-0 top-6 z-10 w-36 rounded-[10px] border border-border bg-background-secondary p-1 shadow-lg">
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        setEditing(true);
+                                    }}
+                                    className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-sm text-text-primary hover:bg-surface"
+                                >
+                                    <Pencil size={14} /> Rename
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        deleteColumn();
+                                    }}
+                                    className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 text-sm text-error hover:bg-surface"
+                                >
+                                    <Trash2 size={14} /> Delete
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
