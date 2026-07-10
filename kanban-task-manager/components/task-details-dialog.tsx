@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import type { Label } from "@/app/generated/prisma/client";
 import type { TaskWithLabels } from "@/lib/types";
 import { Modal } from "@/components/ui/modal";
+import { TaskChecklist } from "@/components/task-checklist";
 
 const PRIORITIES = [
     { value: "LOW", label: "Low", color: "var(--color-info)" },
@@ -190,6 +191,7 @@ export function TaskDetailsDialog({
                         })}
                     </div>
                 </div>
+                <TaskChecklist task={task} />
             </div>
         </Modal>
     );

@@ -32,6 +32,9 @@ export default async function BoardPage({
                         orderBy: { position: "asc" },
                         include: {
                             taskLabels: { include: { label: true } },
+                            checklist: {
+                                include: { items: { orderBy: { position: "asc" } } },
+                            },
                         },
                     },
                 },
