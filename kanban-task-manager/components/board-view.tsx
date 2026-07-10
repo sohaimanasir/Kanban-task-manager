@@ -17,25 +17,27 @@ import {
     arrayMove,
     horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import type { Column, Task } from "@/app/generated/prisma/client";
+import type { Label } from "@/app/generated/prisma/client";
+import type { ColumnWithTasks, TaskWithLabels } from "@/lib/types";
 import { SortableColumn } from "@/components/sortable-column";
 import { CreateColumnButton } from "@/components/create-column-button";
 import { TaskCard } from "@/components/task-card";
 
-type ColumnWithTasks = Column & { tasks: Task[] };
-
 export function BoardView({
     boardId,
     initialColumns,
+    boardLabels,
 }: {
     boardId: string;
     initialColumns: ColumnWithTasks[];
+    boardLabels: Label[];
 }) {
-    const [columns, setColumns] = useState(initialColumns);
-    const [prevInitialColumns, setPrevInitialColumns] = useState(initialColumns);
+    const [columns, setColumns] = useState<ColumnWithTasks[]>(initialColumns);
+    const [prevInitialColumns, setPrevInitialColumns] =
+        useState<ColumnWithTasks[]>(initialColumns);
     const [activeType, setActiveType] = useState<"column" | "task" | null>(null);
     const [activeColumn, setActiveColumn] = useState<ColumnWithTasks | null>(null);
-    const [activeTask, setActiveTask] = useState<Task | null>(null);
+    const [activeTask, setActiveTask] = useState<TaskWithLabels | null>(null);
 
     if (initialColumns !== prevInitialColumns) {
         setPrevInitialColumns(initialColumns);
@@ -181,7 +183,7 @@ export function BoardView({
                     strategy={horizontalListSortingStrategy}
                 >
                     {columns.map((column) => (
-                        <SortableColumn key={column.id} column={column} />
+                        <SortableColumn key={column.id} column={column} boardLabels={boardLabels} />
                     ))}
                 </SortableContext>
                 <CreateColumnButton boardId={boardId} />
@@ -190,7 +192,7 @@ export function BoardView({
             <DragOverlay>
                 {activeType === "task" && activeTask ? (
                     <div className="w-64 rotate-2 opacity-90">
-                        <TaskCard task={activeTask} />
+                        <TaskCard task={activeTask} boardLabels={boardLabels} />
                     </div>
                 ) : null}
                 {activeType === "column" && activeColumn ? (

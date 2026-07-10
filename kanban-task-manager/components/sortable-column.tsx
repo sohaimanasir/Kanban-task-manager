@@ -3,12 +3,17 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
-import type { Column, Task } from "@/app/generated/prisma/client";
+import type { Label } from "@/app/generated/prisma/client";
+import type { ColumnWithTasks } from "@/lib/types";
 import { BoardColumn } from "@/components/board-column";
 
-type ColumnWithTasks = Column & { tasks: Task[] };
-
-export function SortableColumn({ column }: { column: ColumnWithTasks }) {
+export function SortableColumn({
+    column,
+    boardLabels,
+}: {
+    column: ColumnWithTasks;
+    boardLabels: Label[];
+}) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id: column.id, data: { type: "column" } });
 
@@ -22,6 +27,7 @@ export function SortableColumn({ column }: { column: ColumnWithTasks }) {
         <div ref={setNodeRef} style={style} className="flex-shrink-0">
             <BoardColumn
                 column={column}
+                boardLabels={boardLabels}
                 dragHandle={
                     <button
                         {...attributes}

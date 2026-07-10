@@ -5,17 +5,21 @@ import { useRouter } from "next/navigation";
 import { MoreVertical, Trash2, Pencil } from "lucide-react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import type { Column, Task } from "@/app/generated/prisma/client";
 import { SortableTask } from "@/components/sortable-task";
 import { CreateTaskButton } from "@/components/create-task-button";
+import type { ColumnWithTasks } from "@/lib/types";
+import type { Label } from "@/app/generated/prisma/client";
 
-type ColumnWithTasks = Column & { tasks: Task[] };
+
+
 
 export function BoardColumn({
     column,
+    boardLabels,
     dragHandle,
 }: {
     column: ColumnWithTasks;
+    boardLabels: Label[];
     dragHandle?: React.ReactNode;
 }) {
     const router = useRouter();
@@ -112,7 +116,7 @@ export function BoardColumn({
                     strategy={verticalListSortingStrategy}
                 >
                     {column.tasks.map((task) => (
-                        <SortableTask key={task.id} task={task} />
+                        <SortableTask key={task.id} task={task} boardLabels={boardLabels} />
                     ))}
                 </SortableContext>
                 <CreateTaskButton columnId={column.id} />
