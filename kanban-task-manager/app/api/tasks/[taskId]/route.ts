@@ -37,9 +37,14 @@ export async function PATCH(
         );
     }
 
+    const { dueDate, ...rest } = parsed.data;
+
     const task = await prisma.task.update({
         where: { id: taskId },
-        data: parsed.data,
+        data: {
+            ...rest,
+            ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
+        },
     });
 
     return NextResponse.json(task);
