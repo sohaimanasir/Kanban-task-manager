@@ -10,7 +10,7 @@ type ColumnWithTasks = Column & { tasks: Task[] };
 
 export function SortableColumn({ column }: { column: ColumnWithTasks }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-        useSortable({ id: column.id });
+        useSortable({ id: column.id, data: { type: "column" } });
 
     const style = {
         transform: CSS.Transform.toString(transform),
