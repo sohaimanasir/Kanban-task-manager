@@ -22,6 +22,8 @@ import type { ColumnWithTasks, TaskWithLabels } from "@/lib/types";
 import { SortableColumn } from "@/components/sortable-column";
 import { CreateColumnButton } from "@/components/create-column-button";
 import { TaskCard } from "@/components/task-card";
+import { BoardFilters, EMPTY_FILTERS, type TaskFilters } from "@/components/board-filters";
+import { taskMatchesFilters } from "@/lib/filter-tasks";
 
 export function BoardView({
     boardId,
@@ -38,6 +40,7 @@ export function BoardView({
     const [activeType, setActiveType] = useState<"column" | "task" | null>(null);
     const [activeColumn, setActiveColumn] = useState<ColumnWithTasks | null>(null);
     const [activeTask, setActiveTask] = useState<TaskWithLabels | null>(null);
+    const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
 
     if (initialColumns !== prevInitialColumns) {
         setPrevInitialColumns(initialColumns);
@@ -168,39 +171,57 @@ export function BoardView({
         }
     };
 
-    return (
-        <DndContext
-            id="board-dnd-context"
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-        >
-            <div className="mt-6 flex flex-1 gap-4 overflow-x-auto pb-4">
-                <SortableContext
-                    items={columns.map((c) => c.id)}
-                    strategy={horizontalListSortingStrategy}
-                >
-                    {columns.map((column) => (
-                        <SortableColumn key={column.id} column={column} boardLabels={boardLabels} />
-                    ))}
-                </SortableContext>
-                <CreateColumnButton boardId={boardId} />
-            </div>
+    const hasActiveFilters =
+        filters.priorities.size > 0 ||
+        filters.labelIds.size > 0 ||
+        filters.status !== "all" ||
+        filters.dueDate !== "all";
 
-            <DragOverlay>
-                {activeType === "task" && activeTask ? (
-                    <div className="w-64 rotate-2 opacity-90">
-                        <TaskCard task={activeTask} boardLabels={boardLabels} />
-                    </div>
-                ) : null}
-                {activeType === "column" && activeColumn ? (
-                    <div className="w-72 rotate-1 rounded-[12px] bg-background-secondary p-4 opacity-90 shadow-xl">
-                        <h2 className="font-semibold text-text-primary">{activeColumn.title}</h2>
-                    </div>
-                ) : null}
-            </DragOverlay>
-        </DndContext>
+    const displayColumns = hasActiveFilters
+        ? columns.map((col) => ({
+            ...col,
+            tasks: col.tasks.filter((t) => taskMatchesFilters(t, filters)),
+        }))
+        : columns;
+
+    return (
+        <>
+            <div className="mt-4 flex justify-end">
+                <BoardFilters boardLabels={boardLabels} filters={filters} onChange={setFilters} />
+            </div>
+            <DndContext
+                id="board-dnd-context"
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragEnd={handleDragEnd}
+            >
+                <div className="mt-6 flex flex-1 gap-4 overflow-x-auto pb-4">
+                    <SortableContext
+                        items={displayColumns.map((c) => c.id)}
+                        strategy={horizontalListSortingStrategy}
+                    >
+                        {displayColumns.map((column) => (
+                            <SortableColumn key={column.id} column={column} boardLabels={boardLabels} />
+                        ))}
+                    </SortableContext>
+                    <CreateColumnButton boardId={boardId} />
+                </div>
+
+                <DragOverlay>
+                    {activeType === "task" && activeTask ? (
+                        <div className="w-64 rotate-2 opacity-90">
+                            <TaskCard task={activeTask} boardLabels={boardLabels} />
+                        </div>
+                    ) : null}
+                    {activeType === "column" && activeColumn ? (
+                        <div className="w-72 rotate-1 rounded-[12px] bg-background-secondary p-4 opacity-90 shadow-xl">
+                            <h2 className="font-semibold text-text-primary">{activeColumn.title}</h2>
+                        </div>
+                    ) : null}
+                </DragOverlay>
+            </DndContext>
+        </>
     );
 }
