@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, User } from "lucide-react";
 import { Logo } from "./logo";
 import { LogoutButton } from "./logout-button";
+import { SearchDialog } from "@/components/search-dialog";
 
 const NAV_ITEMS = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -18,6 +19,11 @@ export function Sidebar({ user }: { user: { name: string; email: string } }) {
         <aside className="fixed hidden h-screen w-64 flex-col border-r border-border bg-background-secondary p-6 lg:flex">
             <Logo />
 
+            <Logo />
+            <div className="mt-6">
+                <SearchDialog />
+            </div>
+
             <nav className="mt-10 flex flex-col gap-1">
                 {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
                     const active = pathname === href;
@@ -26,8 +32,8 @@ export function Sidebar({ user }: { user: { name: string; email: string } }) {
                             key={href}
                             href={href}
                             className={`flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium transition-colors ${active
-                                    ? "bg-primary/10 text-primary"
-                                    : "text-text-secondary hover:bg-surface hover:text-text-primary"
+                                ? "bg-primary/10 text-primary"
+                                : "text-text-secondary hover:bg-surface hover:text-text-primary"
                                 }`}
                         >
                             <Icon size={18} />
