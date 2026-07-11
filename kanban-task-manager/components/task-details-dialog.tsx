@@ -7,6 +7,7 @@ import type { Label } from "@/app/generated/prisma/client";
 import type { TaskWithLabels } from "@/lib/types";
 import { Modal } from "@/components/ui/modal";
 import { TaskChecklist } from "@/components/task-checklist";
+import { TaskActivity } from "@/components/task-activity";
 
 const PRIORITIES = [
     { value: "LOW", label: "Low", color: "var(--color-info)" },
@@ -191,7 +192,23 @@ export function TaskDetailsDialog({
                         })}
                     </div>
                 </div>
+
                 <TaskChecklist task={task} />
+
+                <TaskActivity taskId={task.id} open={open} />
+
+                <div className="flex justify-end border-t border-border pt-4">
+                    <button
+                        onClick={() => {
+                            saveTitle();
+                            saveDescription();
+                            onClose();
+                        }}
+                        className="rounded-[10px] bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+                    >
+                        Done
+                    </button>
+                </div>
             </div>
         </Modal>
     );

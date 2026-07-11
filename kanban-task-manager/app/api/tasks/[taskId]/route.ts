@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { updateTaskSchema } from "@/lib/validations/task";
+import { logActivity } from "@/lib/log-activity";
 
 async function getOwnedTask(taskId: string, userId: string) {
     return prisma.task.findFirst({
@@ -36,7 +37,6 @@ export async function PATCH(
             { status: 400 }
         );
     }
-
     const { dueDate, ...rest } = parsed.data;
 
     const task = await prisma.task.update({
@@ -46,6 +46,18 @@ export async function PATCH(
             ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
         },
     });
+
+    if (parsed.data.isCompleted !== undefined) {
+        await logActivity(taskId, parsed.data.isCompleted ? "marked this complete" : "marked this incomplete");
+    }
+    if (parsed.data.priority !== undefined) {
+        await logActivity(taskId, `changed priority to ${parsed.data.priority}`);
+    }
+    if (dueDate !== undefined) {
+        await logActivity(taskId, dueDate ? "set a due date" : "removed the due date");
+    }
+
+    return NextResponse.json(task);
 
     return NextResponse.json(task);
 }
