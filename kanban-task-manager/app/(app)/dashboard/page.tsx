@@ -16,7 +16,7 @@ export default async function DashboardPage() {
         : [];
 
     return (
-        <div className="p-8">
+        <div className="p-4 lg:p-8">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[32px] font-bold text-text-primary">

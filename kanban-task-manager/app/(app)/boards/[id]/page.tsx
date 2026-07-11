@@ -47,8 +47,8 @@ export default async function BoardPage({
     }
 
     return (
-        <div className="flex h-screen flex-col p-8">
-            <div className="flex items-center justify-between">
+        <div className="flex min-h-screen flex-col p-4 lg:p-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                     <span
                         className="h-3 w-3 rounded-full"

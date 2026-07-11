@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { Sidebar } from "@/components/sidebar";
+import { AppShell } from "@/components/app-shell";
 
 export default async function AppLayout({
     children,
@@ -15,9 +15,8 @@ export default async function AppLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-background">
-            <Sidebar user={{ name: session.user.name, email: session.user.email }} />
-            <main className="flex-1 lg:ml-64">{children}</main>
-        </div>
+        <AppShell user={{ name: session.user.name, email: session.user.email }}>
+            {children}
+        </AppShell>
     );
 }
