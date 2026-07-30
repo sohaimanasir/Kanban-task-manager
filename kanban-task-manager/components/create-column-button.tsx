@@ -29,7 +29,7 @@ export function CreateColumnButton({ boardId }: { boardId: string }) {
 
     if (adding) {
         return (
-            <div className="w-72 flex-shrink-0 rounded-[12px] bg-background-secondary p-4">
+            <div className="w-full flex-shrink-0 rounded-[12px] bg-background-secondary p-4 sm:w-72">
                 <input
                     autoFocus
                     value={title}
@@ -47,7 +47,7 @@ export function CreateColumnButton({ boardId }: { boardId: string }) {
     return (
         <button
             onClick={() => setAdding(true)}
-            className="flex h-12 w-72 flex-shrink-0 items-center justify-center gap-2 rounded-[12px] border border-dashed border-border text-text-secondary transition-colors hover:border-primary hover:text-primary"
+            className="flex h-12 w-full flex-shrink-0 items-center justify-center gap-2 rounded-[12px] border border-dashed border-border text-text-secondary transition-colors hover:border-primary hover:text-primary sm:w-72"
         >
             <Plus size={18} />
             Add column

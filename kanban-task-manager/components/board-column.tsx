@@ -66,7 +66,7 @@ export function BoardColumn({
                     ) : (
                         <h2
                             onClick={() => setEditing(true)}
-                            className="cursor-text font-semibold text-text-primary"
+                            className="min-w-0 flex-1 cursor-text truncate font-semibold text-text-primary"
                         >
                             {column.title}
                         </h2>

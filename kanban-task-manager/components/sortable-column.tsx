@@ -32,7 +32,7 @@ export function SortableColumn({
                     <button
                         {...attributes}
                         {...listeners}
-                        className="cursor-grab text-text-secondary hover:text-text-primary active:cursor-grabbing"
+                        className="touch-none cursor-grab text-text-secondary hover:text-text-primary active:cursor-grabbing"
                         aria-label="Drag column"
                     >
                         <GripVertical size={16} />

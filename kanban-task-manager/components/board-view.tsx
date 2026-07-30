@@ -59,7 +59,7 @@ export function BoardView({
     }
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+        useSensor(PointerSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
     );
 
     function findColumnId(id: string): string | undefined {

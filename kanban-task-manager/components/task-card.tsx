@@ -64,9 +64,9 @@ export function TaskCard({
                         className="mt-0.5 h-4 w-4 accent-primary"
                     />
                     <p
-                        className={`flex-1 text-sm ${task.isCompleted
-                                ? "text-text-disabled line-through"
-                                : "text-text-primary"
+                        className={`min-w-0 flex-1 break-words text-sm ${task.isCompleted
+                            ? "text-text-disabled line-through"
+                            : "text-text-primary"
                             }`}
                     >
                         {task.title}
