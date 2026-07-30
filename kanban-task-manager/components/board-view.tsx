@@ -7,7 +7,8 @@ import {
     DragOverEvent,
     DragStartEvent,
     DragOverlay,
-    PointerSensor,
+    MouseSensor,
+    TouchSensor,
     closestCenter,
     useSensor,
     useSensors,
@@ -59,7 +60,8 @@ export function BoardView({
     }
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
+        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
     );
 
     function findColumnId(id: string): string | undefined {
