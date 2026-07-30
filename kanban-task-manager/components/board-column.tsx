@@ -50,7 +50,7 @@ export function BoardColumn({
     };
 
     return (
-        <div className="flex w-72 flex-shrink-0 flex-col rounded-[12px] bg-background-secondary p-4">
+        <div className="flex w-full flex-shrink-0 flex-col rounded-[12px] bg-background-secondary p-4 sm:w-72 sm:snap-center">
             <div className="flex items-center gap-2">
                 {dragHandle}
                 <div className="flex flex-1 items-center justify-between">

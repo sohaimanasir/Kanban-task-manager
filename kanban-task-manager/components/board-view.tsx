@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     DndContext,
     DragEndEvent,
@@ -16,6 +16,7 @@ import {
     SortableContext,
     arrayMove,
     horizontalListSortingStrategy,
+    verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import type { Label } from "@/app/generated/prisma/client";
 import type { ColumnWithTasks, TaskWithLabels } from "@/lib/types";
@@ -41,6 +42,16 @@ export function BoardView({
     const [activeColumn, setActiveColumn] = useState<ColumnWithTasks | null>(null);
     const [activeTask, setActiveTask] = useState<TaskWithLabels | null>(null);
     const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
+    const [isMobile, setIsMobile] = useState(
+        () => typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches
+    );
+
+    useEffect(() => {
+        const mql = window.matchMedia("(max-width: 639px)");
+        const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+        mql.addEventListener("change", onChange);
+        return () => mql.removeEventListener("change", onChange);
+    }, []);
 
     if (initialColumns !== prevInitialColumns) {
         setPrevInitialColumns(initialColumns);
@@ -197,10 +208,10 @@ export function BoardView({
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
-                <div className="mt-6 flex flex-1 gap-4 overflow-x-auto pb-4">
+                <div className="mt-6 flex flex-1 flex-col gap-4 sm:flex-row sm:snap-x sm:snap-mandatory sm:overflow-x-auto sm:pb-4">
                     <SortableContext
                         items={displayColumns.map((c) => c.id)}
-                        strategy={horizontalListSortingStrategy}
+                        strategy={isMobile ? verticalListSortingStrategy : horizontalListSortingStrategy}
                     >
                         {displayColumns.map((column) => (
                             <SortableColumn key={column.id} column={column} boardLabels={boardLabels} />
