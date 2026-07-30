@@ -85,7 +85,7 @@ export function BoardFilters({
             {open && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-                    <div className="absolute right-0 top-11 z-20 w-72 space-y-4 rounded-[12px] border border-border bg-background-secondary p-4 shadow-lg">
+                    <div className="absolute right-0 top-11 z-20 w-[calc(100vw-2rem)] max-w-72 space-y-4 rounded-[12px] border border-border bg-background-secondary p-4 shadow-lg">
                         {activeCount > 0 && (
                             <button
                                 onClick={() => onChange(EMPTY_FILTERS)}

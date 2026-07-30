@@ -16,7 +16,7 @@ export function AppShell({
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen bg-background">
+        <div className="flex min-h-screen bg-background overflow-x-hidden">
             <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-border bg-background-secondary px-4 py-3 lg:hidden">
                 <Logo />
                 <button
@@ -52,7 +52,7 @@ export function AppShell({
 
             <Sidebar user={user} />
 
-            <main className="flex-1 pt-16 lg:ml-64 lg:pt-0">{children}</main>
+            <main className="min-w-0 flex-1 pt-16 lg:ml-64 lg:pt-0">{children}</main>
         </div>
     );
 }
